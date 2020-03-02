@@ -1,4 +1,5 @@
 .ipynb_checkpoints
 .DS_Store
+__pycache__
 project2/pybox2d/
 project2/weights/*ep*
