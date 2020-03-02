@@ -9,7 +9,6 @@ from keras.models import Sequential
 from keras.layers import Dense, Activation, LeakyReLU
 from keras.optimizers import Adam
 from keras.models import load_model
-import json
 import tensorflow as tf
 import json
 import os, sys
