@@ -11,4 +11,4 @@ for tau in [0.005, 0.002, 0.001, 0.0005, 0.0002, 0.0001]:
         'lr': 0.0005,
     }
     print("\n",params,"\n")
-    run_experiment(params, f'experiments/tau_{tau}_2.txt')
+    run_experiment(params, f'experiments/lr0.0005_e0.995_tau{tau}_gamma0.99.txt')

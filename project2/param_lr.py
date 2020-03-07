@@ -11,4 +11,4 @@ for lr in [0.005, 0.001, 0.0005, 0.0001]:
         'lr': lr,
     }
     print("\n",params,"\n")
-    run_experiment(params, f'experiments/lr_{lr}.txt')
+    run_experiment(params, f'experiments/lr{lr}_e0.995_tau0.001_gamma0.99.txt')

@@ -11,4 +11,4 @@ for epsilon_decay in [0.999, 0.995, 0.99, 0.95]:
         'lr': 0.0005,
     }
     print("\n",params,"\n")
-    run_experiment(params, f'experiments/epsilon_decay_{epsilon_decay}.txt')
+    run_experiment(params, f'experiments/lr0.0005_e{epsilon_decay}_tau0.001_gamma0.99.txt')

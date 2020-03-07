@@ -100,8 +100,9 @@ class DQL_agent():
             while not done:
                 a = self.epsilon_greedy(s, self.curr_epsilon)
                 next_s, r, done, info = env.step(a)
+                max_step_reached = info.get('TimeLimit.truncated', False)
                 i += 1
-                self.memory.append([s, int(a), r, next_s, done])
+                self.memory.append([s, int(a), r, next_s, done&(~max_step_reached)])
                 if i>=self.batch_size:
                     self.update()
                     self.update_target()
