@@ -13,6 +13,7 @@
 \def\BibTeX{{\rm B\kern-.05em{\sc i\kern-.025em b}\kern-.08em
 		T\kern-.1667em\lower.7ex\hbox{E}\kern-.125emX}}
 
+
 \usepackage[utf8]{inputenc}
 %\usepackage[ruled,vlined]{algorithm2e}
 \usepackage{algpseudocode}
@@ -34,7 +35,9 @@
 	\maketitle
 	
 	\begin{abstract}
-		In this report, I demonstrate my efforts in reproducing some of the results regarding $TD(\lambda)$ algorithm in Sutton's paper: \textit{Learning to Predict by the Methods of Temporal Differences} (1988)\cite{sutton1988learning}. I will explain in detail about my implementation of two experiments presented in the original paper, and the discuss the similarity and discrepancy in my results and that of Sutton's paper.
+		In this report, I demonstrate my efforts in reproducing some of the results regarding $TD(\lambda)$ algorithm in Sutton's paper: \textit{Learning to Predict by the Methods of Temporal Differences} (1988)\cite{sutton1988learning}. I will explain in detail about my implementation of two experiments presented in the original paper, and the discuss the similarity and discrepancy between my results and that of Sutton's paper.
+		
+		Hash for Github: d9dd6012e77199674444301ea09223c9b5e5f18d.
 	\end{abstract}
 	
 	\section{Problem}
@@ -54,9 +57,15 @@
 		& = \nabla_\omega P_t + \lambda \sum_{k=1}^{t-1} \lambda^{t-1-k}\nabla_\omega P_k \\
 		& = \nabla_\omega P_t + \lambda e_{t-1}
 	\end{align*}
-	Putting this in the context of random walk, we have 7 states: A-G (see figure 1). A random walk sequence starts at center state D, and can take a left or right in each step, until ends in terminate states A or G. A sequence has outcome reward $z=0$ if it ends at A, and $z=1$ if it ends at G. At each time step, we can predict the expected outcome based on the current state. For example, if at time step $t$ we are at the center state $D$, we would predict $P_t = P_D = 0.5$ since the sequence is equally likely to end in A and G. If at time $t'$ we are at $F$, then we would expect $P_{t'}=P_F$ to be some number between 0.5 and 1, since the sequence is now more likely to end in G. In fact, we can prove that the expected out come for states B-F is ($\frac{1}{6}$, $\frac{1}{3}$, $\frac{1}{2}$, $\frac{2}{3}$, $\frac{5}{6}$).
+	Putting this in the context of random walk, we have 7 states: A-G (see figure \ref{fig:1}). A random walk sequence starts at center state D, and can take a left or right in each step, until ends in terminate states A or G. A sequence has outcome reward $z=0$ if it ends at A, and $z=1$ if it ends at G. At each time step, we can predict the expected outcome based on the current state. For example, if at time step $t$ we are at the center state $D$, we would predict $P_t = P_D = 0.5$ since the sequence is equally likely to end in A and G. If at time $t'$ we are at $F$, then we would expect $P_{t'}=P_F$ to be some number between 0.5 and 1, since the sequence is now more likely to end in G. In fact, we can prove that the expected out come for states B-F is ($\frac{1}{6}$, $\frac{1}{3}$, $\frac{1}{2}$, $\frac{2}{3}$, $\frac{5}{6}$).
 	
-	In Sutton's paper, the state vector are chosen to be unit vectors, that is $x_B = [1,0,0,0,0]$, $x_C = [0,1,0,0,0]$ ... $x_F = [0,0,0,0,1]$. In this case, $P_t$ is $\mathrm{seq}[t]^{th}$ element of $\omega$. Any other set of orthonormal basis vectors can be used to represent the states, but the exact forms of $P_t$ and $\nabla_\omega P_t$ have to be changed accordingly, and the elements of $\omega$ vector can not be directly interpreted as the expectation value of $z$ (one has to take the general form $\omega^T x$).
+		\begin{figure}
+			\includegraphics[width=3.5in]{figure2.png} 
+			\caption{Sutton's illustration of random walk system (figure 2 of original paper).}
+			\label{fig:1}
+		\end{figure}
+	
+	In Sutton's paper, the state vector are chosen to be unit vectors, that is $x_B = [1,0,0,0,0]$, $x_C = [0,1,0,0,0]$ ... $x_F = [0,0,0,0,1]$. In this case, $P_t$ is $\mathrm{seq}[t]^{th}$ element of $\omega$. Any other set of orthonormal basis vectors can be used to represent the states, but the exact implementation of $P_t$ and $\nabla_\omega P_t$ have to be changed accordingly, and the elements of $\omega$ vector can not be directly interpreted as the expectation value of $z$ (one has to take the general form $\omega^T x$).
 	
 	
 	\section{Implementation}
@@ -142,7 +151,7 @@
 		\label{algo:dw2}
 	\end{algorithm}
 	
-	Sutton's two experiments follows different updating procedure given each training set (10 sequences). Algorithm~\ref{algo:ex1} shows the pseudo-code for experiment 1. The $\omega$ values are updated after seeing the entire training set, during which $\Delta \omega$ is accumulated. Each training set is presented multiple times until $\omega$ converges. In my implementation, the convergence criterion is set to be ... Smaller thresholds are experimented and did not bring significant change in results. It is worth noting that as $\Delta \omega$ is accumulated for the entire training set, experiment 1 typically needs a smaller learning rate than experiment 2. Sutton states in his paper that a small enough learning rate can ensure the convergence (but will certainly requires more iteration). In my implementation, I choose $\alpha=0.1$ and scale it by the size of training set. All training is able to converge under this effective learning rate (0.01), without reaching maximum iteration = 10000.
+	Sutton's two experiments follow different updating procedure given each training set (10 sequences). Algorithm~\ref{algo:ex1} shows the pseudo-code for experiment 1. The $\omega$ values are updated after seeing the entire training set, during which $\Delta \omega$ is accumulated. Each training set is presented multiple times until $\omega$ converges. In my implementation, the convergence criterion is set to be the 2-norm of $\Delta \omega < 1e^{-6}$. Smaller thresholds $1e^{-7}$, $1e^{-8}$ are experimented and did not bring significant change in results. It is worth-noting that as $\Delta \omega$ is accumulated for the entire training set, experiment 1 typically needs a smaller learning rate than experiment 2. Sutton states in his paper that a small enough learning rate can ensure the convergence (but will certainly requires more iteration). In Algorithm \ref{algo:ex1}, I choose $\alpha=0.1$ and scale it by the size of training set. All training is able to converge under this effective learning rate (0.01), without reaching maximum iteration = 10000.
 	
 	
 	\begin{algorithm}[h!]
@@ -155,7 +164,7 @@
 			\State $\Delta \omega \pluseq \mathrm{UPDATE}(\omega, \mathrm{seq}, \alpha/\mathrm{traing\_set\_size}, \lambda)$
 			\EndFor
 			\State $\omega \pluseq \Delta \omega$
-			\If {sum(abs($\Delta \omega$)) $<$ thresh}
+			\If {norm2($\Delta \omega$) $<$ thresh}
 			\State break
 			\EndIf
 			\EndFor
@@ -166,7 +175,7 @@
 		\label{algo:ex1}
 	\end{algorithm}
 	
-	In experiment 2 (see Algorithm~\ref{algo:ex1}), each training set is only presented once, and $\omega$ vector is updated for each sequence of a training set.
+	In experiment 2 (see Algorithm~\ref{algo:ex2}), $\omega$ vector is updated after seeing each sequence of a training set. Each training set is only presented once, and we do not pursue convergence on a training set.
 	
 	\begin{algorithm}[h!]
 		\caption{Experiment 2 $\omega$ update on single training set}
@@ -214,7 +223,7 @@
 		\label{fig:3}
 	\end{figure}
 	
-	Figure 4 shows the average RMSE while altering learning rate $\alpha$, at four different $\lambda$ values (0,0.3,0.8,1). When $\alpha=0$, there is no update on $\omega$, so the error for $\lambda's$ is the RMSE of the initial guess ([0.5,0.5,0.5,0.5,0.5]), which is 0.2357. The general shape of the lines are similar to Sutton's. Errors of $\lambda=1$ increase quickly as $\lambda$ increases. Errors of $\lambda = 0.3$ and $0.8$ are relatively insensitive to $\alpha$. The $\alpha$'s that give minimum error for the above 4 $\lambda$ values are (0.2, 0.2, 0.1, 0.05), while in Sutton's paper there were (0.3, 0.3, 0.15, 0.05). The standard error for the larger $\alpha$ values are quite large, so the lines in this region can change significantly between different runs. As I understand the last sequence in each training set would have stronger influence on $\omega$, especially when $\alpha$ is large, causing more variance between training sets.
+	Figure 4 shows the average RMSE while altering learning rate $\alpha$, at four different $\lambda$ values (0,0.3,0.8,1). When $\alpha=0$, there is no update on $\omega$, so the error for all four $\lambda's$ is the RMSE of the initial guess ([0.5,0.5,0.5,0.5,0.5]), which is 0.2357. The general shape of the lines are similar to Sutton's. Errors of $\lambda=1$ increase quickly as $\lambda$ increases. Errors of $\lambda = 0.3$ and $0.8$ are relatively insensitive to $\alpha$. The $\alpha$'s that give minimum error for the above four $\lambda$ values are (0.2, 0.2, 0.1, 0.05), while in Sutton's paper they were (0.3, 0.3, 0.15, 0.05). The standard error for the larger $\alpha$ values are quite large, so the lines in this region can change significantly between different runs. As I understand the last sequence in each training set would have stronger influence on $\omega$, especially when $\alpha$ is large, causing more variance between training sets.
 	
 	\begin{figure}
 		\includegraphics[height=2.5in]{figure4.png} 
@@ -231,6 +240,7 @@
 	\end{figure}
 	
 \section{conclusion}
+I tried to follow the experiment procedure described in Sutton's paper as closely as possible. I am able to reproduce the major trends in Figure 3,4,5. However there are noticeable differences in the RMSE value ranges that I do not have a satisfactory explanation right now. Some initial assumption on the discrepancy including 1. randomness from training set, 2. different convergence criterion for experiment 1. However, the standard error analysis shows 1 is unlikely, unless Sutton used different procedure of generating training set. Further reducing the thresh in experiment 1 didn't change the RMSE errors significantly either, thus I doubt 2 is the reason causing the difference.
 
 	
 \bibliographystyle{IEEEtran}
