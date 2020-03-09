@@ -151,13 +151,13 @@ Using the following setting, we obtain a trained agent that is able to achieve +
 We train the agent for 1000 episodes, Fig. X shows the reward of each episode during training process. The moving average reward of 100 episodes reaches +200 at around 500 episodes. Afterwards the rewards can still be negative for certain episodes, although the moving average remains above +200 until the end. Using the weights obtained at the end of 1000 episodes, we can evaluate total reward of 100 independent episodes. The distribution of 100 rewards in show in Fig. X. We are able to achieve average total reward of 227, with standard deviation = 55.
 
 \subsection{Effect of Hyperparameters}
-Next we will study the effect of a few hyperparameters: learning rate $lr$, decay factor, and soft-update parameter $\tau$. Other parameters are kept the same though all experiments: initial $\epsilon=1$, batch\_size = 32 , $\gamma=0.99$, max\_buffer\_size = 9600.
+Next we will study the effect of a few hyperparameters: learning rate $lr$, decay factor, $gamma$, and soft-update parameter $\tau$. Other parameters are kept the same though all experiments: initial $\epsilon=1$, batch\_size = 32 , max\_buffer\_size = 9600.
 
 First, we retrain the agent at different learning rate: $lr = 0.005, 0.001, 0.0005, 0.0001$, with other parameters fixed. The learning curves of different learning rate are shown in Fig. \ref{fig:lr}. $lr = 0.001$ and $0.0005$ is able to achieve moving average reward $>200$ during training. For larger learning rate $0.005$, although it performs similarly at the beginning, the rewards does not improve to +200 later on. Small learning rate $0.0001$ learns slowly at the beginning, rewards decrease again towards negative in later episodes, as if the agent ``forget" what is has learned. 
 
 	\begin{figure}
 		\includegraphics[height=2.5in]{figures/lr.png} 
-		\caption{Effect of learning rate. Episode rewards of 1000 episodes for different $decay$ values during training process. $decay=0.995$, $\tau=0.001$ for all runs..}
+		\caption{Effect of learning rate. Moving average reward of 1000 episodes for different $decay$ values during training process. $decay=0.995$, $\tau=0.001$, $\gamma=0.99$ for all runs. The moving average is evaluated with a window of 100 episodes.}
 		\label{fig:lr}
 	\end{figure}
 
@@ -165,7 +165,7 @@ We then turn to the decay rate for $\epsilon$-greedy algorithm. We experimented 
 
 	\begin{figure}
 		\includegraphics[height=2.5in]{figures/epsilon_decay.png} 
-		\caption{Effect of epsilon\_decay. Episode rewards of 1000 episodes for different $decay$ values during training process. $\tau=0.001$, $lr=0.0005$ for all runs.}
+		\caption{Effect of epsilon\_decay. Moving average reward of 1000 episodes for different $decay$ values during training process. $\tau=0.001$, $lr=0.0005$, $\gamma=0.99$ for all runs. The moving average is evaluated with a window of 100 episodes.}
 		\label{fig:epsilon_decay}
 	\end{figure}
 	
@@ -173,11 +173,22 @@ The soft-update parameter $\tau$ acts as a learning rate for the target network.
 
 \begin{figure}
 	\includegraphics[height=2.5in]{figures/tau.png} 
-	\caption{Effect of $\tau$. Episode rewards of 1000 episodes for different $\tau$ values during training process. $decay=0.995$, $lr=0.0005$ for all runs.}
+	\caption{Effect of $\tau$. moving average reward of 1000 episodes for different $\tau$ values during training process. $decay=0.995$, $lr=0.0005$, $\gamma=0.99$ for all runs. The moving average is evaluated with a window of 100 episodes.}
 	\label{fig:tau}
 \end{figure}
 	
-\section{conclusion}
+Finally, we take a brief look at the discount factor $\gamma$. As the goal is to optimize the undiscounted reward during the entire episode, our intuition is $\gamma=1$ may yield the best results. However, interestingly the training seems to be less stable with $\gamma=1$. In Fig. \ref{fig:gamma}, we compare the four independent runs of $\gamma=1$ and $\gamma=0.99$. The learning curve for $\gamma=1$ has larger fluctuation, and the rewards can drop quickly to negative even though the initial training seems to be on the right track. Choosing $\gamma$ to be smaller than 1 partly alleviate the problem, as shown in the 4 runs of $\gamma=0.99$.
+
+\begin{figure}
+	\includegraphics[height=2.5in]{figures/gamma099.png}  \\ 
+	\centering (a) $\gamma=0.99$\\
+	\includegraphics[height=2.5in]{figures/gamma1.png}  \\ 
+	\centering (b)  $\gamma=1$
+	\caption{Comparison between $\gamma=0.99$ (a) and $\gamma=1$ (b). Each graph shows the moving average reward of four independent runs of given $\gamma$ value, with $decay=0.995$, $lr=0.0005$, $\tau=0.001$. The difference between 4 runs of same $\gamma$ value comes from random seed settings. It is shown that $\gamma=0.99$ gives more stable learning curves.}
+	\label{fig:tau}
+\end{figure}
+	
+\section{Discussion}
 
 
 	

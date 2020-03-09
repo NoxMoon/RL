@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.18 (TeX Live 2017) (preloaded format=pdflatex 2017.5.23)  8 MAR 2020 21:57
+This is pdfTeX, Version 3.14159265-2.6-1.40.18 (TeX Live 2017) (preloaded format=pdflatex 2017.5.23)  9 MAR 2020 00:46
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -752,6 +752,9 @@ Package: float 2001/11/08 v1.3d Float enhancements (AL)
 
 LaTeX Warning: Label `algo:seq' multiply defined.
 
+
+LaTeX Warning: Label `fig:tau' multiply defined.
+
 )
 \openout1 = `report.aux'.
 
@@ -885,6 +888,29 @@ Overfull \hbox (19.01183pt too wide) in paragraph at lines 175--176
 [][] 
  []
 
+
+LaTeX Warning: Reference `fig:gamma' on page 3 undefined on input line 180.
+
+<figures/gamma099.png, id=24, 433.62pt x 289.08pt>
+File: figures/gamma099.png Graphic file (type png)
+ <use figures/gamma099.png>
+Package pdftex.def Info: figures/gamma099.png used on input line 183.
+(pdftex.def)             Requested size: 271.01183pt x 180.67499pt.
+
+Overfull \hbox (19.01183pt too wide) in paragraph at lines 183--184
+ [][]  
+ []
+
+<figures/gamma1.png, id=25, 433.62pt x 289.08pt>
+File: figures/gamma1.png Graphic file (type png)
+ <use figures/gamma1.png>
+Package pdftex.def Info: figures/gamma1.png used on input line 185.
+(pdftex.def)             Requested size: 271.01183pt x 180.67499pt.
+
+Overfull \hbox (19.01183pt too wide) in paragraph at lines 185--185
+ [][] 
+ []
+
 No file report.bbl.
 
 ** Conference Paper **
@@ -898,16 +924,21 @@ Before submitting the final camera ready copy, remember to:
  process uses the appropriate paper size.
 
 [3 <./figures/lr.png> <./figures/epsilon_decay.png> <./figures/tau.png>]
-(./report.aux)
+[4
+
+ <./figures/gamma099.png> <./figures/gamma1.png>] (./report.aux)
+
+LaTeX Warning: There were undefined references.
+
 
 LaTeX Warning: There were multiply-defined labels.
 
  ) 
 Here is how much of TeX's memory you used:
- 5249 strings out of 492995
- 74587 string characters out of 6132704
- 149640 words of memory out of 5000000
- 8707 multiletter control sequences out of 15000+600000
+ 5260 strings out of 492995
+ 74810 string characters out of 6132704
+ 150640 words of memory out of 5000000
+ 8716 multiletter control sequences out of 15000+600000
  38913 words of font info for 83 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
  39i,9n,35p,729b,267s stack positions out of 5000i,500n,10000p,200000b,80000s
@@ -925,10 +956,10 @@ dist/fonts/type1/urw/times/utmb8a.pfb></usr/local/texlive/2017/texmf-dist/fonts
 /type1/urw/times/utmbi8a.pfb></usr/local/texlive/2017/texmf-dist/fonts/type1/ur
 w/times/utmr8a.pfb></usr/local/texlive/2017/texmf-dist/fonts/type1/urw/times/ut
 mri8a.pfb>
-Output written on report.pdf (3 pages, 206949 bytes).
+Output written on report.pdf (4 pages, 250140 bytes).
 PDF statistics:
- 74 PDF objects out of 1000 (max. 8388607)
- 49 compressed objects within 1 object stream
+ 81 PDF objects out of 1000 (max. 8388607)
+ 51 compressed objects within 1 object stream
  0 named destinations out of 1000 (max. 500000)
- 16 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 26 words of extra memory for PDF output out of 10000 (max. 10000000)
 
