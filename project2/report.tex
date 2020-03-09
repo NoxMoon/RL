@@ -151,11 +151,31 @@ Using the following setting, we obtain a trained agent that is able to achieve +
 We train the agent for 1000 episodes, Fig. X shows the reward of each episode during training process. The moving average reward of 100 episodes reaches +200 at around 500 episodes. Afterwards the rewards can still be negative for certain episodes, although the moving average remains above +200 until the end. Using the weights obtained at the end of 1000 episodes, we can evaluate total reward of 100 independent episodes. The distribution of 100 rewards in show in Fig. X. We are able to achieve average total reward of 227, with standard deviation = 55.
 
 \subsection{Effect of Hyperparameters}
-Next we explore the effect of a few hyperparameters.
+Next we will study the effect of a few hyperparameters: learning rate $lr$, decay factor, and soft-update parameter $\tau$. Other parameters are kept the same though all experiments: initial $\epsilon=1$, batch\_size = 32 , $\gamma=0.99$, max\_buffer\_size = 9600.
 
-First, we retrain the agent at different learning rate: $lr = 0.005, 0.001, 0.0005, 0.0001$, with other parameters fixed. The learning curves of different learning rate are shown in Fig. X. $lr = 0.001$ and $0.0005$ is able to achieve moving average reward $>200$ during training. For larger learning rate $0.005$, although it performs similarly at the beginning, the rewards does not improve to +200 later on. Small learning rate $0.0001$ learns slowly at the beginning, rewards decrease again towards negative in later episodes, as if the agent ``forget" what is has learned. 
+First, we retrain the agent at different learning rate: $lr = 0.005, 0.001, 0.0005, 0.0001$, with other parameters fixed. The learning curves of different learning rate are shown in Fig. \ref{fig:lr}. $lr = 0.001$ and $0.0005$ is able to achieve moving average reward $>200$ during training. For larger learning rate $0.005$, although it performs similarly at the beginning, the rewards does not improve to +200 later on. Small learning rate $0.0001$ learns slowly at the beginning, rewards decrease again towards negative in later episodes, as if the agent ``forget" what is has learned. 
 
-We then turn to the decay rate for $\epsilon$-greedy algorithm. We experimented with $decay = 0.999, 0.995, 0.99, 0.95$. Smaller decay would make the training enter exploit phase earlier. The rewards can increase faster in the beginning. As show in Fig. X, the reward increase quickest for $decay = 0.95$ in the first 100 episodes, and slowest for $decay = 0.999$. 
+	\begin{figure}
+		\includegraphics[height=2.5in]{figures/lr.png} 
+		\caption{Effect of learning rate. Episode rewards of 1000 episodes for different $decay$ values during training process. $decay=0.995$, $\tau=0.001$ for all runs..}
+		\label{fig:lr}
+	\end{figure}
+
+We then turn to the decay rate for $\epsilon$-greedy algorithm. We experimented with $decay = 0.999, 0.995, 0.99, 0.95$. Smaller decay would make the training enter exploit phase earlier, and the rewards can increase faster in the beginning. As show in Fig. \ref{fig:epsilon_decay}, in the first 100 episodes, the reward increase quickest for $decay = 0.95$, and slowest for $decay = 0.999$. However, without enough explore, the agent do not perform great in the long run -- $\epsilon = 0.995/0.99$ out-performs $decay = 0.95$ in the end. Too large $decay$ is not idea either, for $decay = 0.999$, the learning becomes very slow, because the agent is unable to exploit the learned greedy actions.
+
+	\begin{figure}
+		\includegraphics[height=2.5in]{figures/epsilon_decay.png} 
+		\caption{Effect of epsilon\_decay. Episode rewards of 1000 episodes for different $decay$ values during training process. $\tau=0.001$, $lr=0.0005$ for all runs.}
+		\label{fig:epsilon_decay}
+	\end{figure}
+	
+The soft-update parameter $\tau$ acts as a learning rate for the target network. In Fig. \ref{fig:tau}, we can see larger $\tau$ values like $\tau=0.005$ leads to more instability during the training process, as the target network is updated more aggressively. On the other hand small $\tau$ values like $\tau=0.0002$ and $\tau=0.0001$ will slow down the learning. $\tau=0.0005$ or $0.001$ achieves best performance by balancing the stability and learning efficiency, and are able to achieve moving average reward > 200 without too much fluctuation.
+
+\begin{figure}
+	\includegraphics[height=2.5in]{figures/tau.png} 
+	\caption{Effect of $\tau$. Episode rewards of 1000 episodes for different $\tau$ values during training process. $decay=0.995$, $lr=0.0005$ for all runs.}
+	\label{fig:tau}
+\end{figure}
 	
 \section{conclusion}
 
