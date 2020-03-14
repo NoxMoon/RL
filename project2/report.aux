@@ -1,24 +1,55 @@
 \relax 
+\citation{LunarLander}
+\citation{opengym}
+\citation{mataric1994reward,ng1999policy}
+\citation{mnih2015human}
+\citation{lin1992self,smnih2015human}
 \@writefile{toc}{\contentsline {section}{\numberline {I}introduction to LunarLander}{1}}
 \@writefile{toc}{\contentsline {section}{\numberline {II}Deep Q-Learning}{1}}
 \@writefile{loa}{\contentsline {algorithm}{\numberline {1}{\ignorespaces $\epsilon $-greedy}}{1}}
-\newlabel{algo:seq}{{1}{1}}
+\newlabel{algo:egreedy}{{1}{1}}
 \newlabel{eq:tdtarget}{{4}{1}}
+\citation{hasselt2010double}
+\citation{HasseltGS15DDQL}
 \@writefile{toc}{\contentsline {section}{\numberline {III}Double Q-Learning}{2}}
 \@writefile{toc}{\contentsline {section}{\numberline {IV}Double Deep Q-Learning}{2}}
 \@writefile{loa}{\contentsline {algorithm}{\numberline {2}{\ignorespaces Double Deep-Q Learning}}{2}}
 \newlabel{algo:ddql}{{2}{2}}
 \@writefile{toc}{\contentsline {section}{\numberline {V}Experiment Results}{2}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {\unhbox \voidb@x \hbox {V-A}}Training Agent}{2}}
-\@writefile{lof}{\contentsline {figure}{\numberline {1}{\ignorespaces Effect of learning rate. Moving average reward of 1000 episodes for different $decay$ values during training process. $decay=0.995$, $\tau =0.001$, $\gamma =0.99$ for all runs. The moving average is evaluated with a window of 100 episodes.}}{3}}
-\newlabel{fig:lr}{{1}{3}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {\unhbox \voidb@x \hbox {V-A}}Training}{2}}
+\@writefile{lof}{\contentsline {figure}{\numberline {1}{\ignorespaces Episode rewards of 1000 episodes during training process. $lr=0.0005$, $decay=0.995$, $\tau =0.001$, $\gamma =0.99$. The moving average of 100 episodes is shown in the orange line.}}{3}}
+\newlabel{fig:training_r}{{1}{3}}
+\@writefile{lof}{\contentsline {figure}{\numberline {2}{\ignorespaces Distribution of rewards for 100 independent episodes using the trained agent.}}{3}}
+\newlabel{fig:test_r}{{2}{3}}
 \@writefile{toc}{\contentsline {subsection}{\numberline {\unhbox \voidb@x \hbox {V-B}}Effect of Hyperparameters}{3}}
-\@writefile{lof}{\contentsline {figure}{\numberline {2}{\ignorespaces Effect of epsilon\_decay. Moving average reward of 1000 episodes for different $decay$ values during training process. $\tau =0.001$, $lr=0.0005$, $\gamma =0.99$ for all runs. The moving average is evaluated with a window of 100 episodes.}}{3}}
-\newlabel{fig:epsilon_decay}{{2}{3}}
-\@writefile{lof}{\contentsline {figure}{\numberline {3}{\ignorespaces Effect of $\tau $. moving average reward of 1000 episodes for different $\tau $ values during training process. $decay=0.995$, $lr=0.0005$, $\gamma =0.99$ for all runs. The moving average is evaluated with a window of 100 episodes.}}{3}}
-\newlabel{fig:tau}{{3}{3}}
+\@writefile{lof}{\contentsline {figure}{\numberline {3}{\ignorespaces Effect of learning rate. Moving average reward of 1000 episodes for different $decay$ values during training process. $decay=0.995$, $\tau =0.001$, $\gamma =0.99$ for all runs. The moving average is evaluated with a window of 100 episodes.}}{3}}
+\newlabel{fig:lr}{{3}{3}}
+\@writefile{lof}{\contentsline {figure}{\numberline {4}{\ignorespaces Effect of epsilon\_decay. Moving average reward of 1000 episodes for different $decay$ values during training process. $\tau =0.001$, $lr=0.0005$, $\gamma =0.99$ for all runs. The moving average is evaluated with a window of 100 episodes.}}{4}}
+\newlabel{fig:epsilon_decay}{{4}{4}}
+\@writefile{lof}{\contentsline {figure}{\numberline {5}{\ignorespaces Effect of $\tau $. moving average reward of 1000 episodes for different $\tau $ values during training process. $decay=0.995$, $lr=0.0005$, $\gamma =0.99$ for all runs. The moving average is evaluated with a window of 100 episodes.}}{4}}
+\newlabel{fig:tau}{{5}{4}}
+\@writefile{toc}{\contentsline {section}{\numberline {VI}Discussion}{4}}
+\@writefile{lof}{\contentsline {figure}{\numberline {6}{\ignorespaces Comparison between $\gamma =0.99$ (a) and $\gamma =1$ (b). Each graph shows the moving average reward of four independent runs of given $\gamma $ value, with $decay=0.995$, $lr=0.0005$, $\tau =0.001$. The difference between 4 runs of same $\gamma $ value comes from random seed settings. It is shown that $\gamma =0.99$ gives more stable learning curves.}}{4}}
+\newlabel{fig:gamma}{{6}{4}}
+\citation{schaul2015prioritized}
+\citation{wang2015dueling}
+\citation{ddqn,ddqn2,ddqn3,improvedqn,duelingDQN}
 \bibstyle{IEEEtran}
 \bibdata{reference}
-\@writefile{lof}{\contentsline {figure}{\numberline {4}{\ignorespaces Comparison between $\gamma =0.99$ (a) and $\gamma =1$ (b). Each graph shows the moving average reward of four independent runs of given $\gamma $ value, with $decay=0.995$, $lr=0.0005$, $\tau =0.001$. The difference between 4 runs of same $\gamma $ value comes from random seed settings. It is shown that $\gamma =0.99$ gives more stable learning curves.}}{4}}
-\newlabel{fig:gamma}{{4}{4}}
-\@writefile{toc}{\contentsline {section}{\numberline {VI}Discussion}{4}}
+\bibcite{LunarLander}{1}
+\bibcite{opengym}{2}
+\bibcite{mataric1994reward}{3}
+\bibcite{ng1999policy}{4}
+\bibcite{mnih2015human}{5}
+\bibcite{lin1992self}{6}
+\bibcite{hasselt2010double}{7}
+\bibcite{HasseltGS15DDQL}{8}
+\bibcite{schaul2015prioritized}{9}
+\bibcite{wang2015dueling}{10}
+\bibcite{ddqn}{11}
+\bibcite{ddqn2}{12}
+\bibcite{ddqn3}{13}
+\bibcite{improvedqn}{14}
+\bibcite{duelingDQN}{15}
+\@writefile{toc}{\contentsline {section}{\numberline {VII}acknowledgement}{5}}
+\@writefile{toc}{\contentsline {section}{References}{5}}

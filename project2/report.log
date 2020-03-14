@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.18 (TeX Live 2017) (preloaded format=pdflatex 2017.5.23)  13 MAR 2020 14:00
+This is pdfTeX, Version 3.14159265-2.6-1.40.18 (TeX Live 2017) (preloaded format=pdflatex 2017.5.23)  14 MAR 2020 18:08
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -834,18 +834,18 @@ G,.JBIG2,.JB2,.eps]
 File: epstopdf-sys.cfg 2010/07/13 v1.3 Configuration of (r)epstopdf for TeX Liv
 e
 ))
-LaTeX Font Info:    Try loading font information for U+msa on input line 42.
+LaTeX Font Info:    Try loading font information for U+msa on input line 44.
 
 (/usr/local/texlive/2017/texmf-dist/tex/latex/amsfonts/umsa.fd
 File: umsa.fd 2013/01/14 v3.01 AMS symbols A
 )
-LaTeX Font Info:    Try loading font information for U+msb on input line 42.
+LaTeX Font Info:    Try loading font information for U+msb on input line 44.
 
 (/usr/local/texlive/2017/texmf-dist/tex/latex/amsfonts/umsb.fd
 File: umsb.fd 2013/01/14 v3.01 AMS symbols B
 )
 
-LaTeX Warning: `!h' float specifier changed to `!ht'.
+LaTeX Warning: Citation `smnih2015human' on page 1 undefined on input line 90.
 
 [1{/usr/local/texlive/2017/texmf-var/fonts/map/pdftex/updmap/pdftex.map}
 
@@ -854,62 +854,127 @@ LaTeX Warning: `!h' float specifier changed to `!ht'.
 
 LaTeX Warning: `!h' float specifier changed to `!ht'.
 
-[2] <figures/lr.png, id=21, 433.62pt x 289.08pt>
-File: figures/lr.png Graphic file (type png)
- <use figures/lr.png>
-Package pdftex.def Info: figures/lr.png used on input line 167.
+[2] <figures/training_rewards.png, id=21, 433.62pt x 289.08pt>
+File: figures/training_rewards.png Graphic file (type png)
+
+<use figures/training_rewards.png>
+Package pdftex.def Info: figures/training_rewards.png used on input line 164.
 (pdftex.def)             Requested size: 271.01183pt x 180.67499pt.
 
-Overfull \hbox (19.01183pt too wide) in paragraph at lines 167--168
+Overfull \hbox (19.01183pt too wide) in paragraph at lines 164--165
 [][] 
  []
 
-<figures/epsilon_decay.png, id=23, 433.62pt x 289.08pt>
+<figures/test_reward_dist.png, id=23, 433.62pt x 289.08pt>
+File: figures/test_reward_dist.png Graphic file (type png)
+
+<use figures/test_reward_dist.png>
+Package pdftex.def Info: figures/test_reward_dist.png used on input line 170.
+(pdftex.def)             Requested size: 271.01183pt x 180.67499pt.
+
+Overfull \hbox (19.01183pt too wide) in paragraph at lines 170--171
+[][] 
+ []
+
+<figures/lr.png, id=24, 433.62pt x 289.08pt>
+File: figures/lr.png Graphic file (type png)
+ <use figures/lr.png>
+Package pdftex.def Info: figures/lr.png used on input line 181.
+(pdftex.def)             Requested size: 271.01183pt x 180.67499pt.
+
+Overfull \hbox (19.01183pt too wide) in paragraph at lines 181--182
+[][] 
+ []
+
+<figures/epsilon_decay.png, id=25, 433.62pt x 289.08pt>
 File: figures/epsilon_decay.png Graphic file (type png)
 
 <use figures/epsilon_decay.png>
-Package pdftex.def Info: figures/epsilon_decay.png used on input line 175.
+Package pdftex.def Info: figures/epsilon_decay.png used on input line 189.
 (pdftex.def)             Requested size: 271.01183pt x 180.67499pt.
 
-Overfull \hbox (19.01183pt too wide) in paragraph at lines 175--176
+Overfull \hbox (19.01183pt too wide) in paragraph at lines 189--190
 [][] 
  []
 
-<figures/tau.png, id=24, 433.62pt x 289.08pt>
+<figures/tau.png, id=26, 433.62pt x 289.08pt>
 File: figures/tau.png Graphic file (type png)
  <use figures/tau.png>
-Package pdftex.def Info: figures/tau.png used on input line 183.
+Package pdftex.def Info: figures/tau.png used on input line 197.
 (pdftex.def)             Requested size: 271.01183pt x 180.67499pt.
 
-Overfull \hbox (19.01183pt too wide) in paragraph at lines 183--184
+Overfull \hbox (19.01183pt too wide) in paragraph at lines 197--198
 [][] 
  []
 
-<figures/gamma099.png, id=25, 433.62pt x 289.08pt>
+[3 <./figures/training_rewards.png> <./figures/test_reward_dist.png> <./figures
+/lr.png>] <figures/gamma099.png, id=35, 433.62pt x 289.08pt>
 File: figures/gamma099.png Graphic file (type png)
- <use figures/gamma099.png>
-Package pdftex.def Info: figures/gamma099.png used on input line 191.
+
+<use figures/gamma099.png>
+Package pdftex.def Info: figures/gamma099.png used on input line 205.
 (pdftex.def)             Requested size: 271.01183pt x 180.67499pt.
 
-Overfull \hbox (19.01183pt too wide) in paragraph at lines 191--192
+Overfull \hbox (19.01183pt too wide) in paragraph at lines 205--206
  [][]  
  []
 
-<figures/gamma1.png, id=26, 433.62pt x 289.08pt>
+<figures/gamma1.png, id=36, 433.62pt x 289.08pt>
 File: figures/gamma1.png Graphic file (type png)
  <use figures/gamma1.png>
-Package pdftex.def Info: figures/gamma1.png used on input line 193.
+Package pdftex.def Info: figures/gamma1.png used on input line 207.
 (pdftex.def)             Requested size: 271.01183pt x 180.67499pt.
 
-Overfull \hbox (19.01183pt too wide) in paragraph at lines 193--193
+Overfull \hbox (19.01183pt too wide) in paragraph at lines 207--207
  [][] 
  []
 
+[4 <./figures/epsilon_decay.png> <./figures/tau.png> <./figures/gamma099.png> <
+./figures/gamma1.png>] (./report.bbl
+Underfull \hbox (badness 4832) in paragraph at lines 73--75
+[]\OT1/ptm/m/n/8 ``Double deep q networks--tackling max-i-miza-tion bias in dee
+p
+ []
 
-Underfull \vbox (badness 5893) has occurred while \output is active []
 
- [3 <./figures/lr.png> <./figures/epsilon_decay.png> <./figures/tau.png>]
-No file report.bbl.
+Underfull \hbox (badness 10000) in paragraph at lines 73--75
+\OT1/ptm/m/n/8 q-learning,'' https://towardsdatascience.com/double-deep-q-netwo
+rks-
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 77--79
+[]\OT1/ptm/m/n/8 ``Self learn-ing ai-agents iii:deep (dou-ble) q-learning,''
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 81--83
+\OT1/ptm/m/n/8 https://medium.com/@qempsil0914/deep-q-learning-part2-double-dee
+p-
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 85--88
+[]\OT1/ptm/m/n/8 ``Improvements in deep q learn-ing: Du-el-ing dou-
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 85--88
+\OT1/ptm/m/n/8 ble dqn, pri-or-i-tized ex-pe-ri-ence re-play, and fixed...),''
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 85--88
+\OT1/ptm/m/n/8 https://www.freecodecamp.org/news/improvements-in-deep-q-
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 85--88
+\OT1/ptm/m/n/8 learning-dueling-double-dqn-prioritized-experience-replay-and-fi
+xed-
+ []
+
+)
 
 ** Conference Paper **
 Before submitting the final camera ready copy, remember to:
@@ -921,34 +986,38 @@ Before submitting the final camera ready copy, remember to:
  uses only Type 1 fonts and that every step in the generation
  process uses the appropriate paper size.
 
-[4 <./figures/gamma099.png> <./figures/gamma1.png>] (./report.aux) ) 
+[5] (./report.aux)
+
+LaTeX Warning: There were undefined references.
+
+ ) 
 Here is how much of TeX's memory you used:
- 5262 strings out of 492995
- 74834 string characters out of 6132704
- 151625 words of memory out of 5000000
- 8718 multiletter control sequences out of 15000+600000
- 38913 words of font info for 83 fonts, out of 8000000 for 9000
+ 5301 strings out of 492995
+ 75554 string characters out of 6132704
+ 151692 words of memory out of 5000000
+ 8752 multiletter control sequences out of 15000+600000
+ 40049 words of font info for 84 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 39i,9n,35p,930b,267s stack positions out of 5000i,500n,10000p,200000b,80000s
-{/usr/local
-/texlive/2017/texmf-dist/fonts/enc/dvips/base/8r.enc}</usr/local/texlive/2017/t
-exmf-dist/fonts/type1/public/amsfonts/cm/cmex10.pfb></usr/local/texlive/2017/te
-xmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb></usr/local/texlive/2017/tex
-mf-dist/fonts/type1/public/amsfonts/cm/cmmi7.pfb></usr/local/texlive/2017/texmf
--dist/fonts/type1/public/amsfonts/cm/cmmi8.pfb></usr/local/texlive/2017/texmf-d
-ist/fonts/type1/public/amsfonts/cm/cmr10.pfb></usr/local/texlive/2017/texmf-dis
-t/fonts/type1/public/amsfonts/cm/cmr7.pfb></usr/local/texlive/2017/texmf-dist/f
-onts/type1/public/amsfonts/cm/cmr8.pfb></usr/local/texlive/2017/texmf-dist/font
-s/type1/public/amsfonts/cm/cmsy10.pfb></usr/local/texlive/2017/texmf-dist/fonts
-/type1/public/amsfonts/cm/cmsy5.pfb></usr/local/texlive/2017/texmf-dist/fonts/t
-ype1/public/amsfonts/cm/cmsy7.pfb></usr/local/texlive/2017/texmf-dist/fonts/typ
-e1/urw/times/utmb8a.pfb></usr/local/texlive/2017/texmf-dist/fonts/type1/urw/tim
-es/utmbi8a.pfb></usr/local/texlive/2017/texmf-dist/fonts/type1/urw/times/utmr8a
-.pfb></usr/local/texlive/2017/texmf-dist/fonts/type1/urw/times/utmri8a.pfb>
-Output written on report.pdf (4 pages, 260903 bytes).
+ 39i,9n,35p,947b,267s stack positions out of 5000i,500n,10000p,200000b,80000s
+{/usr/local/texlive/2017/texmf-dist/fonts/enc/dvips/base/8r.enc}</usr/local/t
+exlive/2017/texmf-dist/fonts/type1/public/amsfonts/cm/cmex10.pfb></usr/local/te
+xlive/2017/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb></usr/local/tex
+live/2017/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi7.pfb></usr/local/texli
+ve/2017/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi8.pfb></usr/local/texlive
+/2017/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb></usr/local/texlive/2
+017/texmf-dist/fonts/type1/public/amsfonts/cm/cmr7.pfb></usr/local/texlive/2017
+/texmf-dist/fonts/type1/public/amsfonts/cm/cmr8.pfb></usr/local/texlive/2017/te
+xmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/local/texlive/2017/tex
+mf-dist/fonts/type1/public/amsfonts/cm/cmsy5.pfb></usr/local/texlive/2017/texmf
+-dist/fonts/type1/public/amsfonts/cm/cmsy7.pfb></usr/local/texlive/2017/texmf-d
+ist/fonts/type1/urw/times/utmb8a.pfb></usr/local/texlive/2017/texmf-dist/fonts/
+type1/urw/times/utmbi8a.pfb></usr/local/texlive/2017/texmf-dist/fonts/type1/urw
+/times/utmr8a.pfb></usr/local/texlive/2017/texmf-dist/fonts/type1/urw/times/utm
+ri8a.pfb>
+Output written on report.pdf (5 pages, 301353 bytes).
 PDF statistics:
- 85 PDF objects out of 1000 (max. 8388607)
- 54 compressed objects within 1 object stream
+ 92 PDF objects out of 1000 (max. 8388607)
+ 56 compressed objects within 1 object stream
  0 named destinations out of 1000 (max. 500000)
- 26 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 36 words of extra memory for PDF output out of 10000 (max. 10000000)
 

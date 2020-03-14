@@ -1,0 +1,58 @@
+This is BibTeX, Version 0.99d (TeX Live 2017)
+Capacity: max_strings=100000, hash_size=100000, hash_prime=85009
+The top-level auxiliary file: report.aux
+The style file: IEEEtran.bst
+Reallocated singl_function (elt_size=4) to 100 items from 50.
+Reallocated singl_function (elt_size=4) to 100 items from 50.
+Reallocated singl_function (elt_size=4) to 100 items from 50.
+Reallocated wiz_functions (elt_size=4) to 6000 items from 3000.
+Reallocated singl_function (elt_size=4) to 100 items from 50.
+Database file #1: reference.bib
+Warning--I didn't find a database entry for "smnih2015human"
+-- IEEEtran.bst version 1.14 (2015/08/26) by Michael Shell.
+-- http://www.michaelshell.org/tex/ieeetran/bibtex/
+-- See the "IEEEtran_bst_HOWTO.pdf" manual for usage information.
+
+Done.
+You've used 15 entries,
+            4087 wiz_defined-function locations,
+            897 strings with 9752 characters,
+and the built_in function-call counts, 8527 in all, are:
+= -- 625
+> -- 201
+< -- 53
++ -- 112
+- -- 37
+* -- 375
+:= -- 1263
+add.period$ -- 31
+call.type$ -- 15
+change.case$ -- 15
+chr.to.int$ -- 126
+cite$ -- 15
+duplicate$ -- 660
+empty$ -- 761
+format.name$ -- 43
+if$ -- 1970
+int.to.chr$ -- 0
+int.to.str$ -- 15
+missing$ -- 127
+newline$ -- 70
+num.names$ -- 9
+pop$ -- 339
+preamble$ -- 1
+purify$ -- 0
+quote$ -- 2
+skip$ -- 670
+stack$ -- 0
+substring$ -- 309
+swap$ -- 463
+text.length$ -- 11
+text.prefix$ -- 0
+top$ -- 5
+type$ -- 15
+warning$ -- 0
+while$ -- 29
+width$ -- 17
+write$ -- 143
+(There was 1 warning)
