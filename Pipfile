@@ -13,6 +13,8 @@ ipykernel = "==5.1.4"
 tqdm = "==4.35.0"
 tensorflow = "==2.1.0"
 keras = "==2.3.1"
+cvxopt = "*"
+setuptools-scm = "*"
 
 [requires]
 python_version = "3.6"
