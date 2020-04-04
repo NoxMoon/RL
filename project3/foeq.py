@@ -7,11 +7,12 @@ solvers.options['glpk'] = {'tm_lim' : 1000}
 class FoeQ():
     
     class agent():
-        def __init__(self, nS, na1, na2):
+        def __init__(self, nS, na1, na2, i):
             self.nS = nS
             self.na1, self.na2 = na1, na2
             self.p = np.ones([nS, na1])/na1
-            self.Q = np.ones([nS, na2, na1]) # nstate, other player action, my action
+            self.Q = np.ones([nS, na2, na1])*i # nstate, other player action, my action
+            # for two-agent zero sum game we enforce Q1=-Q2, for general sum game we can use the random initialization
             self.V = np.zeros([nS])
         
         def select_action(self, s):
@@ -25,11 +26,9 @@ class FoeQ():
             new_col = [1 for i in range(self.na2)] + [0 for i in range(self.na1)]
             G = np.insert(G, 0, new_col, axis=1) # insert utility column
             G = matrix(G)
-            #print("G",G)
-            h = matrix(np.array([0 for i in range(self.na1+self.na2)], dtype='float'))
-            #print("h",h)
+            h = matrix(np.array([0 for i in range(self.na2+self.na1)], dtype='float'))
             # contraints Ax = b
-            A = matrix(np.matrix([0] + [1 for i in range(self.na2)], dtype="float"))
+            A = matrix(np.matrix([0] + [1 for i in range(self.na1)], dtype="float"))
             b = matrix(np.matrix(1, dtype="float"))
             sol = solvers.lp(c=c, G=G, h=h, A=A, b=b, solver=solver)
             if not sol["x"]:
@@ -44,12 +43,12 @@ class FoeQ():
             self.V[s] = val
         
         def update_Q(self, s, next_s, a1, a2, r, alpha, gamma):
-            self.Q[s][a1][a2] = (1-alpha)*self.Q[s][a1][a2] + alpha*(r+gamma*self.V[next_s])
+            self.Q[s][a1][a2] = (1-alpha)*self.Q[s][a1][a2] + alpha*((1-gamma)*r+gamma*self.V[next_s])
             
     def __init__(self, nS, nA):
         assert len(nA)==2, "foeQ only works for two agent..."
-        self.agent1 = self.agent(nS, nA[0], nA[1])
-        self.agent2 = self.agent(nS, nA[1], nA[0])
+        self.agent1 = self.agent(nS, nA[0], nA[1], 1)
+        self.agent2 = self.agent(nS, nA[1], nA[0], -1)
         
     def select_action(self, s):
         return self.agent1.select_action(s), self.agent2.select_action(s)
@@ -58,10 +57,10 @@ class FoeQ():
         a1, a2 = action
         r1, r2 = reward
         
-        self.agent1.update_Q(s, next_s, a2, a1, r1, alpha, gamma)
-        self.agent1.minmax(s)
-        
+        self.agent1.update_Q(s, next_s, a2, a1, r1, alpha, gamma)     
         self.agent2.update_Q(s, next_s, a1, a2, r2, alpha, gamma)
+        
+        self.agent1.minmax(s)
         self.agent2.minmax(s)
         
     def log_value(self):
