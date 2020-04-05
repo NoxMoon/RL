@@ -1,0 +1,190 @@
+%\documentclass{article}
+%\documentclass[aip,jcp,amsmath,amssymb,reprint]{revtex4-1}
+
+\documentclass[conference]{IEEEtran}
+\IEEEoverridecommandlockouts
+% The preceding line is only needed to identify funding in the first footnote. If that is unneeded, please comment it out.
+\usepackage{cite}
+\usepackage{amsmath,amssymb,amsfonts}
+%\usepackage{algorithmic}
+\usepackage{graphicx}
+\usepackage{textcomp}
+\usepackage{xcolor}
+\def\BibTeX{{\rm B\kern-.05em{\sc i\kern-.025em b}\kern-.08em
+		T\kern-.1667em\lower.7ex\hbox{E}\kern-.125emX}}
+
+
+\usepackage[utf8]{inputenc}
+%\usepackage[ruled,vlined]{algorithm2e}
+\usepackage{algpseudocode}
+\usepackage{algorithm}
+\usepackage{amsmath}
+\usepackage{amssymb}
+
+\newcommand{\pluseq}{\mathrel{+}=}
+\newcommand{\minuseq}{\mathrel{-}=}
+\newcommand{\asteq}{\mathrel{*}=}
+\renewcommand{\algorithmiccomment}[1]{\hfill$\triangleright$\textit{#1}}
+
+\title{CS7642 Project 2 -- Solving LunarLander problem with Double Deep Q-Learning}
+\author{Qinghui Ge}
+\date{January 2020}
+
+\begin{document}
+	
+	\maketitle
+	
+\begin{abstract}
+
+	
+	git hash: 
+\end{abstract}
+	
+	
+\section{Soccer Game}
+
+\section{Learner implementation}
+We follow a general off-policy learning template (Alg. \ref{algo:learning}) for all training process, each learner (Q, Friend-Q, Foe-Q, CE-Q) has to implement it's own way of action selection (for $\epsilon$-greedy to call if greedy action is needed), and the function to update Q values. The general form of updating $Q$ values of agent $i$ is:
+\begin{equation}
+Q_i(s, \mathbf{a}) = (1-\alpha) Q_i(s, \mathbf{a}) + \alpha  \big( (1-\gamma) R_i + \gamma V_i(s') \big)
+\label{eq:update}
+\end{equation}
+where $\alpha$ is learning rate, $\gamma$ is discount factor. $\mathbf{a}=(a_1, a_2\dots a_N)$ is a combination of all agent actions (although we will see in Q-Learning each agent only need to track the Q-table of its own action, while for other learners each agent also keep track of other agent's actions). Each learner defines state value function $V_i(s)$ differently.
+
+Our implementation of Foe-Q is restricted to only two agents, while Q-Learning, Friend-Q, and CE-Q are generalized to handle multi-agents, with each agent potentially having different action choices. The joint action space of all agent is $\mathbf{A}=\{A_1, A_2 \dots A_N\}$.
+
+In Greenward's 2003 paper, it is unclear how learning rate is decayed, and whether Friend/Foe-Q, CE-Q used $\epsilon$-greedy for action exploration. In Greenward's 2005 extented paper, the authors decay learning rate according to the number of times each state-action pair is visited, i.e. $\alpha(s,\mathbf{a}) = 1/n(s,\mathbf{a})$. The 2005 paper also employs $\epsilon=1$ (random action selection) for Friend/Foe-Q, CE-Q. We implemented this procedure described in Greenward's 2005 paper, as well as other possibilities such as decaying $\epsilon$ and $\alpha$ exponentially.
+
+\begin{algorithm}[h!]
+	\caption{off\_policy\_learning template}
+	\begin{algorithmic}
+		\Function{off\_policy\_learning}{learner, env}
+			\For {each episode}
+				\State reset environment, get current state $s$
+				\For {t in episode}
+					\State $\mathbf{a} = \epsilon$-greedy(learner, env, s, $\epsilon$)
+					\State take action $\mathbf{a}$, observe $s'$, $\mathbf{R}$, done
+					\State learner.update($s$, $s'$, $\mathbf{a}$, $\mathbf{R}$ done, $\alpha(s,\mathbf{a})$, $\gamma$)
+				    \State decay $\alpha$, e.g. $\alpha(s,\mathbf{a}) = 1/n(s,\mathbf{a})$
+				    \State optional: decay $\epsilon$, e.g. $\epsilon \asteq \epsilon\_decay$
+				    \State $s=s'$
+				\EndFor			
+			\EndFor
+		\EndFunction
+	\end{algorithmic}
+	\label{algo:learning}
+\end{algorithm}
+
+\subsection{Q-Learning}
+In Q-Learning implementation, each agent $i$ maintains its own Q-table of size $nS\times nA_i$. The greedy action is each agent taking it's own greedy action, i.e:
+\begin{align*}
+& \mathbf{a^*} = (a_1^*, a_2^* \dots a_N^*) \\
+& a_i^* = argmax_{a_i} Q_i(s, a_i), a_i \in A_i
+\end{align*}
+The value function used in Eq.\ref{eq:update} is:
+\begin{equation}
+V(s) = max_{a_i} Q_i(s, a_i) = Q_i(s, a_i^*)
+\end{equation}
+
+\subsection{Friend-Q}
+In Friend-Q, each agent maintain a copy of Q-table of size $nS\times nA_1 \times\dots nA_N$. Each agent assumes other agents will corporate to maximize the Q values, and the greedy action is defined as:
+\begin{align*}
+& \mathbf{a^*} = (a_1^*, a_2^* \dots a_N^*) \\
+& a_i^* = argmax_{\mathbf{a}} Q_i(s, \mathbf{a})[i], \mathbf{a} \in \mathbf{A}
+\end{align*}
+The value function is defined as:
+\begin{equation}
+V(s) = max_{\mathbf{a} } Q_i(s,  \mathbf{a})  = Q_i(s, \mathbf{a^*})
+\end{equation}
+
+\subsection{Foe-Q}
+In Foe-Q learning, each agent maintain a of Q-table of size $nS \times nA_{opponent} \times nA_{self}$. The agents can follow a mixed policy: each agent $i$ takes action $a_i$ with probability $\sigma_i(a_i)$. The greedy policy is obtained from solving the minimax problem of $\sigma$:
+\begin{equation}
+\sigma_i^*(a) = max_{\sigma_i} min_{a_o\in A_{opponent}} \sum_{a_i\in A_{self}}Q_i(a_o, a_i) \sigma_i(a_i)
+\end{equation}
+and the greedy action can be sampled from the minimax probability: $a_i^* \sim \sigma_i^*(a)$.
+
+Let the value function $V_i = min_{a_o} \sum_{a_i}Q_i(a_o, a_i) \sigma_i(a_i)$, the minimax equation can be formulated in the following linear programing problem:
+\begin{align}
+& \text{maximize $V_i$} \\
+%[-1, 0... 0] 
+%\begin{bmatrix}
+%V_i  \\
+%\sigma_i
+%\end{bmatrix} \notag \\
+1.\; & \text{$nA_o$ inequality constraint:} \notag \notag\\
+& V_i-\sum_{a_i\in A_i} Q_i(a_o, a_i)\sigma_i(a_i)\le 0, \forall a_o \in A_{opponent} \notag \\ 
+%& [\mathbf{1}, -Q_i]
+%\begin{bmatrix}
+%V_i  \\
+%\sigma_i
+%\end{bmatrix}
+%\le 0 \notag \\
+2.\; & \text{$nA_i$ inequality constraint}:  \sigma_i(a_i) \ge 0, \forall a_i\in A_i \notag\\
+%[\mathbf{0}, -I]  
+%\begin{bmatrix}
+%V_i  \\
+%\sigma_i
+%\end{bmatrix}
+%\le 0 \notag \\
+3.\; & \text{1 equality constraint:} \sum_{a_i\in A_i} \sigma_i(a_i) = 1 \\
+%& [0, 1\dots1]  
+%\begin{bmatrix}
+%V_i  \\
+%\sigma_i
+%\end{bmatrix}
+%= 1
+\end{align}
+The second inequality constraint and equality constraint are simply probability restrictions. Foe-Q follows Alg.\ref{algo:foe-Q} to solve the minimax problem and update Q values. Note we first update $Q(s)$ with $V(s')$ then solve for $V(s)$ with the updated $Q(s)$, alternatively we can solve $V(s')$ from $Q(s')$ first, then update $Q(s)$. I believe the order shouldn't matter -- more like a chicken or egg problem. But with the first way we can initialize $V=0$ and no need to treat terminal state specially, the second way we don't need to save $V$ in memory.
+
+\begin{algorithm}[h!]
+	\caption{foe-Q update}
+	\begin{algorithmic}
+		\Function{foe-Q.update}{s, s', $\mathbf{a}$, $\mathbf{R}$}
+		\State $Q_1(s, a_2, a_1) = (1-\alpha) Q_1(s, a_2, a_1) + \alpha  \big( (1-\gamma) R_1 + \gamma V_1(s') \big)$
+		\State $Q_2(s, a_1, a_2) = (1-\alpha) Q_2(s, a_1, a_2) + \alpha  \big( (1-\gamma) R_2 + \gamma V_2(s') \big)$
+		\State $V_1(s), \sigma_1(s) = minimax(Q_1(s))$
+		\State $V_2(s), \sigma_2(s) = minimax(Q_2(s))$
+		\EndFunction
+	\end{algorithmic}
+	\label{algo:foe-Q}
+\end{algorithm}
+
+\subsection{Correlated-Q}
+In CE-Q, each agent maintain a copy of Q-table of size $nS\times nA_1 \times\dots nA_N$. All agents follows a mixed policy based on join probability $\sigma(\mathbf{a}) = \sigma(a_1, a_2 \dots a_N)$. The joint probability has to satisfy rational constraint as well as regular probability constraint. For utilitarian CE-Q, the objective function is to maximize the sum of the agents’ rewards, and the uCE-Q can be formulated in the following linear programing problem:
+
+\begin{align}
+&\text{maximize} \sum_i^{n_{agent}} \sum_{\mathbf{a}\in\mathbf{A}} Q_i(\mathbf{a}) \sigma(\mathbf{a}) \notag \\
+1.\; & \text{Each agent contribute $nA_i(nA_i-1)$ rational constraint:} \notag\\
+& \sum_{\mathbf{a_o}} (Q_i(\mathbf{a_o}, a_i') - Q_i(\mathbf{a_o}, a_i) ) \sigma(\mathbf{a_o}, a_i) \le 0 \notag \\
+& \forall a_i\neq a_i' \in A_i  \notag \\
+& \mathbf{a_o} \in \{ A_1, A_2 \dots A_{i-1}, A_{i+1} \dots A_{N} \} \notag \\
+2.\; & \text{$\Pi_i  nA_i$ inequality constraint}: \sigma(\mathbf{a})\le 0,  \forall \mathbf{a}\in\mathbf{A}\notag \\
+3.\; &\text{1 equality constraint:} \sum_{\mathbf{a}\in\mathbf{A}} \sigma(\mathbf{a}) = 1
+\end{align}
+After solving the above LP and obtain the joint probability, the state value function can be calculated as: $V_i(s) = \sum_{\mathbf{a}} Q_i(s, \mathbf{a}) \sigma(s, \mathbf{a})$. The uCE-Q updating procedure is summarized in Alg.\ref{algo:ce-Q}.
+
+\begin{algorithm}[h!]
+	\caption{Correlated-Q update}
+	\begin{algorithmic}
+		\Function{CE-Q.update}{s, s', $\mathbf{a}$, $\mathbf{R}$}
+		\For {i = 1,2$\dots$ $n_{agent}$}
+			\State $Q_i(s, \mathbf{a}) = (1-\alpha) Q_i(s, \mathbf{a}) + \alpha  \big( (1-\gamma) R_i + \gamma V_i(s') \big)$
+		\EndFor
+		\State $\sigma(s, \mathbf{a}) = uCE(\{Q_1(s), Q_2(s)\dots Q_N(s)\})$ 
+		\For {i = 1,2$\dots$ $n_{agent}$}
+		\State $V_i(s) = \sum_{\mathbf{a}} Q_i(s, \mathbf{a}) \sigma(s, \mathbf{a})$
+		\EndFor
+		\EndFunction
+	\end{algorithmic}
+	\label{algo:ce-Q}
+\end{algorithm}
+
+
+\section{Comparison between Foe-Q and Correlated-Q}
+
+	
+\bibliographystyle{IEEEtran}
+\bibliography{reference}
+
+\end{document}

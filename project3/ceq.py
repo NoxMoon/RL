@@ -29,7 +29,6 @@ class ceQ():
             
         def get_rational_constraint(self, s):
             #print("agent",self.i)
-            #self.Q[s] = Q2[self.i]
 
             nc = self.na*(self.na-1) # number of rational constraint for each agent
 
@@ -39,11 +38,10 @@ class ceQ():
                 Q0 = np.take(self.Q[s], a, axis=self.i) # Q0 = Q[:,:..a..:]
                 Q0 = np.expand_dims(Q0, axis=self.i)
                 constraint = np.delete(self.Q[s] - Q0, a, axis=self.i)# for agent i, action a, compute Q[:,:,...:]-Q[:,:..a..:], only for a'!=a, a' in action of agent i.
-                constraint = np.moveaxis(constraint, self.i, 0)
+                constraint = np.moveaxis(constraint, self.i, 0) # reshape to [(na_i-1),na_1, .. na_i-1,na_i+1, .. na_N]
                 put_by_axis(rational_c[(self.na-1)*a:(self.na-1)*(a+1)], constraint, a, axis=self.i+1)
             
-            rational_c = rational_c.reshape(nc, -1)
-            #self.c = rational_c
+            rational_c = rational_c.reshape(nc, -1) #reshape to [nc, prod(na_i)]
             return rational_c
         
         def update_Q(self, s, next_s, a, r, done, alpha, gamma):
@@ -88,5 +86,4 @@ class ceQ():
         
     def log_value(self):
         # player A taking action S(4) and player B stick(0)
-        # agent1.Q[s][4][0] or agent2.Q[s][4][0]
         return self.agents[0].Q[71][4][0]+self.agents[0].Q[71][4][3]

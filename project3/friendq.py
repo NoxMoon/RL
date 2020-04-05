@@ -25,5 +25,4 @@ class FriendQ():
         
     def log_value(self):
         # player A taking action S(4) and player B stick(0)
-        # agent1.Q[s][4][0] or agent2.Q[s][4][0]
-        return self.agents[0].Q[71][0][4]
+        return self.agents[0].Q[71][4][0]+self.agents[0].Q[71][4][3]
