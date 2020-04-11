@@ -7,8 +7,8 @@ class FriendQ():
             self.Q = np.zeros([nS]+list(nA)) # nstate, player1 action, player2 action ...
         
         def select_action(self, s):
-            max_idx = np.where(self.Q[s] == np.max(self.Q[s]))
-            return max_idx[self.i][0]
+            max_idx = np.where(np.abs(self.Q[s]-np.max(self.Q[s]))<1e-8)
+            return np.random.choice(max_idx[self.i])
         
         def update_Q(self, s, next_s, a, r, alpha, gamma):
             self.Q[s][a] = (1-alpha)*self.Q[s][a] + alpha*((1-gamma)*r+gamma*np.max(self.Q[next_s]))
