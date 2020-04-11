@@ -42,16 +42,16 @@ In this project, we try to reproduce Figure 3 of Amy Greenward's paper, \textit{
 	
 	
 \section{Soccer Game}
-The soccer game is a two-player zero-sum game. On a $4\times2$ grid, there are two players A,B and a ball. For each player, the objective is to carry the ball to his or her designated goal area and receive +100 reward. Carrying the ball to opponent's area or allow the opponent to score would receive -100 reward. There are five possible actions for each player: N, S, E, W and Stick. Fig.\ref{fig:state_s} shows the initial state of soccer game.
+The soccer game is a two-player zero-sum game. On a $4\times2$ grid, there are two players A, B and a ball. For each player, the objective is to carry the ball to his or her designated goal area and receive +100 reward. Carrying the ball to opponent's area or allow the opponent to score would receive -100 reward. There are five possible actions for each player: N, S, E, W and Stick. Fig.\ref{fig:state_s} shows state $s$ (also the initial state of simulation) of soccer game.
 
-\begin{figure}
+\begin{figure}[!h]
 	\centering
 	\includegraphics[width=3.4in]{figures/state_s}
 	\caption{Soccer game, state $s$ (Figure 4 or Greenward 2003 paper\cite{greenwald2003correlated})}
 	\label{fig:state_s}
 \end{figure}
 
-There is certain ambiguity in the game rules described in Greenward's paper\cite{greenwald2003correlated}. We implement the rule as following: First determine which player (A or B) moves first, then execute two players' actions based on the random order. For each player, if the next position do not collide with other player's current position, he can move to the new position, otherwise, if he losses ball to the other player(if he has it). After executing two actions, check if the termination criterion is met and assign rewards. The game is implemented like an Opengym environment, with the ``step"-like function defined in Alg.\ref{algo:soccer}. The \textit{step} function takes a tuple of action $\mathbf{a}$=$(a_A,a_B)$, and returns the state index based on two players position and ball ownership, reward as a tuple $\mathbf{R}$=$(R_A,R_B)$, and boolean variable \textit{done} to indicator whether the game has ended. For the soccer game, there are $8\times7\times2=112$ states.
+There is certain ambiguity in the game rules described in Greenward's paper\cite{greenwald2003correlated}. We implement the rule as following: First determine which player (A or B) moves first, then execute two players' actions based on the random order. For each action execution, if the moving player's next position do not collide with the other player's current position, he can move to the new position, otherwise, he losses ball to the other player (if he has it). After executing two actions, check if the termination criterion is met and assign rewards. The game is implemented like an Opengym environment, with the ``step"-like function defined in Alg.\ref{algo:soccer}. The \textit{step} function takes a tuple of action $\mathbf{a}$=$(a_A,a_B)$, and returns the state index (based on two players position and ball ownership), reward as a tuple $\mathbf{R}$=$(R_A,R_B)$, and boolean variable \textit{done} to indicator whether the game has ended. For the soccer game, there are $8\times7\times2=112$ states.
 
 \begin{algorithm}[h!]
 	\caption{soccer game environment implementation}
@@ -227,19 +227,19 @@ After solving the above LP and obtain the joint probability, the state value fun
 \section{Experiment Results}
 While training all learners, we keep track of the Q value of state $s$ (as show in Fig.\ref{fig:state_s}), with player A taking action S and player B sticking to reproduce figure.3 in Greenward 2003 paper. Since in state $s$, taking action N would bump into the wall and result in stick effectively, we will add up the Q value of player B taking N and stick together. It is unclear to me whether the iteration in x-axis means each time step or each episode in Greenward's paper, but given the large number I would assume it is every time step -- although this doesn't make material difference that affect our conclusion. 
 
-For Q-Learning, we decay $\alpha\rightarrow0.001$ and $\epsilon\rightarrow0.001$ exponentially with decay rate 0.99995. For Friend-Q, Foe-Q and CE-Q, we decay $\alpha$ according to the number of visits to each state-action pairs: $\alpha(s,\mathbf{a})=1/n(s,\mathbf{a})$, and use random exploration for choosing actions ($\epsilon=1$). All learner are trained for 200000 iterations. The discount factor $\gamma=0.9$.
+We decay learning rate $\alpha$ from 1 to 0.001 with exponential decay rate 0.99999. For Q-Learning, we use $\epsilon$-greedy with $\epsilon$ decaying from 1 to 0.001, exponential decay rate 0.99999. For Friend-Q, Foe-Q and CE-Q, use random exploration for choosing actions ($\epsilon=1$). All learner are trained for 1,000,000 iterations. The discount factor $\gamma=0.9$.
 
 Q-Learning does not converge. In Fig.\ref{fig:results}(a), we can see the difference in Q-value decreases at the beginning, but this is the decaying of learning rate. When the learning rate reduce to minimum (0.001), we can see there is constant fluctuation of the error. Q-Learning tries to find a pure policy, while for this game, the equilibrium is a mixed policy.
 
-From Fig.\ref{fig:results}(b), we can see the Q values converges quickly for friend-Q. However, the resulting actions are not rational. From the Q-table of state $s$, we can see for player B, action $E$ dominate other actions, so player B would move right and expect player A to move aside or score for him. The best Q-value for player B is both A and B take action $E$, so there is 50\% chance $B$ can score +100 in the current round. While the Q-table for player A has $Q_A[:, W]=10$, this means A can take any action and expect B to move $W$ and score for him. Note the maximum possible Q-value $\pm10$ results from the $(1-\gamma)R_i$ term when we have $\gamma=0.9$.
+From Fig.\ref{fig:results}(b), we can see the Q values converges quickly for friend-Q. However, the resulting actions are not rational. From the Q-table of state $s$, we can see for player B, action $E$ dominate other actions, so player B would move right and expect player A to move aside or score for him. The best Q-value for player B is both A and B take action $E$, because there is 50\% chance $B$ can score +100 in the current round. The Q-table for player A has $Q_A[:, W]=10$, this means A can take any action and expect B to move $W$ and score for him. Note the maximum possible Q-value $\pm10$ results from the $(1-\gamma)R_i$ term when we have $\gamma=0.9$.
 
-Foe-Q and $u$CE-Q also converges. If the initialization are the same and apply Greenward 2005 paper settings (decay $\alpha$ according to $n(s,a)$, random action exploration), the learning curves are nearly identical for both learners. The final Q-value difference are with in $10^{-7}$ and both learner gives a mixed policy with both player randomly choose between stick and heading south: $\sigma_A(stick/N)=0.423, \sigma_A(S)=0.577, \sigma_B(stick/N)=0.606, \sigma_B(S)=0.394$. Note for $u$CE-Q each players policy is  marginal probability computed from joint probability $\sigma_i(a_i) = \sum_{\mathbf{a_o}}\sigma(\mathbf{a_o}, a_i)$.
+Foe-Q and $u$CE-Q also converges. If the initialization are the same, the learning curves are nearly identical for both learners. The final Q-value difference are with in $10^{-7}$ and both learner gives a mixed policy with both player randomly choose between stick and heading south: $\sigma_A(stick/N)=0.525, \sigma_A(S)=0.475, \sigma_B(stick/N)=0.455, \sigma_B(S)=0.545$. Note for $u$CE-Q each players policy is  marginal probability computed from joint probability $\sigma_i(a_i) = \sum_{\mathbf{a_o}}\sigma(\mathbf{a_o}, a_i)$.
 
-However, if I decay $\alpha$ exponentially in action exploration, I am unable to converge Foe-Q and $u$CE-Q to the exact Q-values. I am uncertain if this is because the hyperparameters are not optimal or undetected bugs in my code. I assume having a state-action dependent learning rate might be more beneficial so that less frequently visited states can be updated effectively. On the other hand, I verified that when passing a same Q table, the Foe-Q minimax solver and the $u$CE-Q solver would give the same policy and state value -- so I am a bit more confident with my implementation.
+We also experimented with the learning rate decaying schedule in Greenward's 2005 paper, $\alpha(s,\mathbf{a}) = 1/n(s,\mathbf{a})$ and observed similar behavior for all learners. However, the final policy of foe-Q and CE-Q is a bit different from that of exponential decay, $\sigma_A(stick/N)=0.4, \sigma_A(S)=0.6, \sigma_B(stick/N)=0.615, \sigma_B(S)=0.385$. It is possible that one or both schemes haven't converged yet. I verified that when passing a same Q table, the Foe-Q minimax solver and the $u$CE-Q solver would give the same policy and state value -- so I am a bit more confident with my implementation, the difference in final results is likely due to training hyperparameters.
 
-The final Q-table of state $s$ for both Foe-Q and CE-Q is shown in Fig.\ref{fig:foe-ce-Q}. Interestingly, in Foe-Q and CE-Q, two players Q-table preserve the property $Q_A = -Q_B$ during training (If not initialized this way, it empirically converge to something close). For Friend-Q, the converged Q-table does not satisfy $Q_A = -Q_B$ (also see Fig.\ref{fig:friendQ}). As far as I understand, in zero-sum game, there isn't a collaborative equilibrium, so friend-Q does not necessarily converge to Nash equilibrium. Foe-Q converge to Nash equilibrium because there is adversarial equilibrium, and the collaborative equilibrium coincide with Nash equilibrium in case of zero-sum game.
+The final Q-table of state $s$ for both Foe-Q and CE-Q is shown in Fig.\ref{fig:foe-ce-Q}. Interestingly, in Foe-Q and CE-Q, two players Q-table preserve the property $Q_A = -Q_B$ during training (If not initialized this way, it empirically converge to something close). For Friend-Q, the converged Q-table does not satisfy $Q_A = -Q_B$ (also see Fig.\ref{fig:friendQ}). As far as I understand, in zero-sum game, there isn't a collaborative equilibrium, so friend-Q does not necessarily converge to Nash equilibrium. Foe-Q converge to Nash equilibrium because there is adversarial equilibrium, and the collaborative equilibrium coincide with Nash equilibrium in case of zero-sum game. Also, in Friend-Q, the Q-table reflects the values when each player expect the other being collaborative, this is not the case in reality however. While in Foe-Q and CE-Q, the other player is behaving as expected --- playing minimax or follow the ``referee".
 
-\begin{figure}
+\begin{figure}[h!]
 	\centering
 	\includegraphics[width=3.4in]{figures/friendQ_A.png}\\
 	(a) player A\\
@@ -250,7 +250,7 @@ The final Q-table of state $s$ for both Foe-Q and CE-Q is shown in Fig.\ref{fig:
 \end{figure}
 
 
-\begin{figure}
+\begin{figure}[h!]
 	\centering
 	\includegraphics[width=3.4in]{figures/foeQ_A.png}\\
 	(a) player A\\
@@ -261,7 +261,7 @@ The final Q-table of state $s$ for both Foe-Q and CE-Q is shown in Fig.\ref{fig:
 \end{figure}
 
 
-\begin{figure*}
+\begin{figure*}[h!]
 	\begin{tabular}{cc}
 		\includegraphics[width=3.4in]{figures/Q.png} &
 		\includegraphics[width=3.4in]{figures/friendQ.png} \\
@@ -270,7 +270,7 @@ The final Q-table of state $s$ for both Foe-Q and CE-Q is shown in Fig.\ref{fig:
 		\includegraphics[width=3.4in]{figures/ceQ.png} \\
 		(a) Foe-Q & (b) $u$CE-Q \\
 	\end{tabular}
-	\caption{The difference of player A's Q value for state $s$ and player A taking action S and player B sticking/N in each iteration, $|Q_A^t(s, S, Stick/N) - Q_A^{t-1}(s, S, Stick/N)|$ (the TD error). For Q-Learning, $\alpha\rightarrow0.001$, $\epsilon\rightarrow0.001$ with decay rate 0.99995. For Friend-Q, Foe-Q, CE-Q, $\alpha(s,\mathbf{a})=1/n(s,\mathbf{a})$, $\epsilon=1$. $\gamma=0.9$}
+	\caption{The difference of player A's Q value for state $s$ and player A taking action S and player B sticking/N in each iteration, $|Q_A^t(s, S, Stick/N) - Q_A^{t-1}(s, S, Stick/N)|$ (the TD error in each iteration). $\alpha\rightarrow0.001$. $\gamma=0.9$, For Q-Learning, $\epsilon\rightarrow0.001$. For Friend-Q, Foe-Q, CE-Q, $\epsilon=1$. }
 	\label{fig:results}
 \end{figure*}
 
