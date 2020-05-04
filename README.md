@@ -2,7 +2,7 @@
 
 HW1: Value Iteration
 
-HW2: TD($\lamgbda) -- n-step TD
+HW2: TD($$\lambda$$) -- n-step TD
 
 HW3: SARSA
 
@@ -12,7 +12,7 @@ HW5: KWIK
 
 HW6: Game Theory/LP for Rock-paper-stone
 
-Project1: reproduce TD($\lambda$)
+Project1: reproduce TD($$\lambda$$)
 
 Project2: Deep Q-Learning for LunaLander
 
