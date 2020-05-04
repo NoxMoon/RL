@@ -35,9 +35,9 @@
 	\maketitle
 	
 \begin{abstract}
-In this project, we try to reproduce Figure 3 of Amy Greenward's paper, \textit{Correlated Q-learning}, 2003\cite{greenwald2003correlated}.  Correlated Q-learning is an algorithm tries to find the correlated equilibrium in Markov games. Correlated-Q generalize Nash-Q and Friend/Foe-Q, and can be solved with linear programming. In general sum games, correlated equilibria contains all Nash equilibria, while in constant sum games correlated equilibria contains minimax equilibria. We implemented Correlated-Q, as well as regular Q-learning, Friend-Q, Foe-Q and compare their behavior in solving soccer game --- a zero sum game. We show that in this particular game, Correlated-Q reaches the save solution as Foe-Q.
+In this project, we try to reproduce Figure 3 of Amy Greenward's paper, \textit{Correlated Q-learning}, 2003\cite{greenwald2003correlated}.  Correlated Q-learning is an algorithm tries to find the correlated equilibrium in Markov games. Correlated-Q generalize Nash-Q and Friend/Foe-Q. With a pre-defined objective function, each variant of CE-Q has a unique value, and can be solved with linear programming. In general sum games, correlated equilibria contains all Nash equilibria, while in constant sum games correlated equilibria contains minimax equilibria. We implemented Correlated-Q, as well as regular Q-learning, Friend-Q, Foe-Q and compare their behavior in solving soccer game --- a zero sum game. We show that in this particular game, Correlated-Q reaches the same solution as Foe-Q.
 
-	git hash: 
+	git hash: a742a4888913012822b348926f8b854b286bae45
 \end{abstract}
 	
 	
@@ -93,7 +93,7 @@ Q_i(s, \mathbf{a}) = (1-\alpha) Q_i(s, \mathbf{a}) + \alpha  \big( (1-\gamma) R_
 
 where $\alpha$ is learning rate, $\gamma$ is discount factor. $\mathbf{a}=(a_1, a_2\dots a_N)$ is a combination of all agent actions (although we will see in Q-Learning each agent only need to track the Q-table of its own action, while for other learners each agent also keep track of other agent's actions). Each learner defines state value function $V_i(s)$ differently.
 
-Our implementation of Foe-Q is currently restricted to only two agents, while Q-Learning, Friend-Q, and CE-Q are generalized to handle multi-agents, with each agent potentially having different action choices. The joint action space of all agent is $\mathbf{A}=\{A_1, A_2 \dots A_N\}$. As Littman has point-out, Friend/Foe-Q can be combined into the same frame framework, with some agents as friend, and some agents as foe\cite{littman2001friend}.
+Our implementation of Foe-Q is currently restricted to only two agents, while Q-Learning, Friend-Q, and CE-Q are generalized to handle multiple agents, with each agent potentially having different action choices. The joint action space of all agent is $\mathbf{A}=\{A_1, A_2 \dots A_N\}$. As Littman has point-out, Friend/Foe-Q can be combined into the same frame framework, with some agents as friend, and some agents as foe\cite{littman2001friend}.
 
 In Greenward's 2003 paper\cite{greenwald2003correlated}, it is unclear how learning rate is decayed, and whether Friend/Foe-Q, CE-Q used $\epsilon$-greedy for action exploration. In Greenward's 2005 extented paper\cite{greenwald2005correlated}, the authors decay learning rate according to the number of times each state-action pair is visited, i.e. $\alpha(s,\mathbf{a}) = 1/n(s,\mathbf{a})$. The 2005 paper also employs $\epsilon=1$ (random action selection) for Friend/Foe-Q, CE-Q. We implemented this procedure described in Greenward's 2005 paper, as well as other possibilities such as decaying $\epsilon$ and $\alpha$ exponentially.
 
@@ -129,14 +129,14 @@ V(s) = max_{a_i} Q_i(s, a_i) = Q_i(s, a_i^*)
 \end{equation}
 
 \subsection{Friend-Q}
-In Friend-Q, each agent maintain a copy of Q-table of size $nS\times nA_1 \times\dots nA_N$. Each agent assumes other agents will corporate to maximize the Q values, and the greedy action is defined as:
+In Friend-Q, each agent maintains a copy of Q-table of size $nS\times nA_1 \times\dots nA_N$. Each agent assumes other agents will corporate to maximize the Q values, and the greedy action is defined as:
 \begin{align*}
 & \mathbf{a^*} = (a_1^*, a_2^* \dots a_N^*) \\
 & a_i^* = argmax_{\mathbf{a}} Q_i(s, \mathbf{a})[i], \mathbf{a} \in \mathbf{A}
 \end{align*}
 The value function is defined as:
 \begin{equation}
-V(s) = max_{\mathbf{a} } Q_i(s,  \mathbf{a})  = Q_i(s, \mathbf{a^*})
+V(s) = max_{\mathbf{a} } Q_i(s,  \mathbf{a})
 \end{equation}
 
 \subsection{Foe-Q}
@@ -204,7 +204,7 @@ In CE-Q, each agent maintain a copy of Q-table of size $nS\times nA_1 \times\dot
 2.\; & \text{$\Pi_i  nA_i$ inequality constraint}: \sigma(\mathbf{a})\le 0,  \forall \mathbf{a}\in\mathbf{A}\notag \\
 3.\; &\text{1 equality constraint:} \sum_{\mathbf{a}\in\mathbf{A}} \sigma(\mathbf{a}) = 1
 \end{align}
-The rational probability can be interpret as following: assuming there is a referee recommend all agent to act according to joint probability distribution $\sigma(\mathbf{a})$. Assuming all other agent follows the referee's advise, for agent $i$, the expected reward for playing the recommended action $a_i$ is $\sum_{\mathbf{a_o}}  Q_i(\mathbf{a_o}, a_i)  \sigma(\mathbf{a_o}, a_i)$, while for playing another action $a_i'$ $\sum_{\mathbf{a_o}}  Q_i(\mathbf{a_o}, a_i')  \sigma(\mathbf{a_o}, a_i)$. The rational constraint simply says, at correlated equilibrium, an agent receives maximum reward if he follows referee's recommendation, given other agents also follow the referee.
+The rational probability can be interpret as following: assuming there is a referee recommend all agent to act according to joint probability distribution $\sigma(\mathbf{a})$. Assuming all other agents follows the referee's advise, then for agent $i$, the expected reward for playing the recommended action $a_i$ is $\sum_{\mathbf{a_o}}  Q_i(\mathbf{a_o}, a_i)  \sigma(\mathbf{a_o}, a_i)$, while for playing another action $a_i'$ $\sum_{\mathbf{a_o}}  Q_i(\mathbf{a_o}, a_i')  \sigma(\mathbf{a_o}, a_i)$. The rational constraint simply says, at correlated equilibrium, an agent receives maximum reward if he follows referee's recommendation, given other agents also follow the referee.
 
 After solving the above LP and obtain the joint probability, the state value function can be calculated as: $V_i(s) = \sum_{\mathbf{a}} Q_i(s, \mathbf{a}) \sigma(s, \mathbf{a})$. The $u$CE-Q updating procedure is summarized in Alg.\ref{algo:ce-Q}.
 
@@ -215,7 +215,7 @@ After solving the above LP and obtain the joint probability, the state value fun
 		\For {i = 1,2$\dots$ $n_{agent}$}
 			\State $Q_i(s, \mathbf{a}) = (1-\alpha) Q_i(s, \mathbf{a}) + \alpha  \big( (1-\gamma) R_i + \gamma V_i(s') \big)$
 		\EndFor
-		\State $\sigma(s, \mathbf{a}) = uCE(\{Q_1(s), Q_2(s)\dots Q_N(s)\})$ 
+		\State $\sigma(s, \mathbf{a}) = uCE\_LP(\{Q_1(s), Q_2(s)\dots Q_N(s)\})$ 
 		\For {i = 1,2$\dots$ $n_{agent}$}
 		\State $V_i(s) = \sum_{\mathbf{a}} Q_i(s, \mathbf{a}) \sigma(s, \mathbf{a})$
 		\EndFor
@@ -225,19 +225,19 @@ After solving the above LP and obtain the joint probability, the state value fun
 \end{algorithm}
 
 \section{Experiment Results}
-While training all learners, we keep track of the Q value of state $s$ (as show in Fig.\ref{fig:state_s}), with player A taking action S and player B sticking to reproduce figure.3 in Greenward 2003 paper. Since in state $s$, taking action N would bump into the wall and result in stick effectively, we will add up the Q value of player B taking N and stick together. It is unclear to me whether the iteration in x-axis means each time step or each episode in Greenward's paper, but given the large number I would assume it is every time step -- although this doesn't make material difference that affect our conclusion. 
+While training all learners, we keep track of the Q value of state $s$ (as show in Fig.\ref{fig:state_s}), with player A taking action S and player B sticking to reproduce Figure 3 in Greenward 2003 paper. Since in state $s$, taking action N would bump into the wall and result in stick effectively, we will add up the Q value of player B taking N and stick together. It is unclear to me whether the iteration in x-axis means each time step or each episode in Greenward's paper, but given the large number I would assume it is every time step -- although this doesn't make material difference that affect our conclusion. 
 
-We decay learning rate $\alpha$ from 1 to 0.001 with exponential decay rate 0.99999. For Q-Learning, we use $\epsilon$-greedy with $\epsilon$ decaying from 1 to 0.001, exponential decay rate 0.99999. For Friend-Q, Foe-Q and CE-Q, use random exploration for choosing actions ($\epsilon=1$). All learner are trained for 1,000,000 iterations. The discount factor $\gamma=0.9$.
+We decay learning rate $\alpha$ from 1 to 0.001 with exponential decay rate 0.99999. For Q-Learning, we use $\epsilon$-greedy with $\epsilon$ decaying from 1 to 0.001, exponential decay rate 0.99999. For Friend-Q, Foe-Q and CE-Q, we use random exploration for choosing actions ($\epsilon=1$). All learner are trained for 1,000,000 iterations. The discount factor $\gamma=0.9$.
 
-Q-Learning does not converge. In Fig.\ref{fig:results}(a), we can see the difference in Q-value decreases at the beginning, but this is the decaying of learning rate. When the learning rate reduce to minimum (0.001), we can see there is constant fluctuation of the error. Q-Learning tries to find a pure policy, while for this game, the equilibrium is a mixed policy.
+Q-Learning does not converge. In Fig.~\ref{fig:results}a, we can see the difference in Q-value decreases at the beginning, but this is due to the decaying of learning rate. When the learning rate reduces to minimum (0.001), we can see there is constant fluctuation of the error. Q-Learning is not able to converge because it tries to find a pure policy regardless of other player's behavior, while for this game, there is no pure policy equilibrium. If one agent choose a fixed action, the other agent can always counter act on it.
 
-From Fig.\ref{fig:results}(b), we can see the Q values converges quickly for friend-Q. However, the resulting actions are not rational. From the Q-table of state $s$, we can see for player B, action $E$ dominate other actions, so player B would move right and expect player A to move aside or score for him. The best Q-value for player B is both A and B take action $E$, because there is 50\% chance $B$ can score +100 in the current round. The Q-table for player A has $Q_A[:, W]=10$, this means A can take any action and expect B to move $W$ and score for him. Note the maximum possible Q-value $\pm10$ results from the $(1-\gamma)R_i$ term when we have $\gamma=0.9$.
+The Q values converges very quickly for friend-Q (see Fig.~\ref{fig:results}b). However, the resulting actions are not rational. From the Q-table of state $s$, we can see for player B, action $E$ dominate other actions, so player B would move right and expect player A to move aside or score for him. The best Q-value for player B is when both A and B take action $E$, because there is 50\% chance $B$ can score +100 in the current round (when B's action is executed first). The Q-table for player A has $Q_A[:, W]=10$, this means A can take any action and expect B to move $W$ and score for him immediately. Note the maximum possible Q-value $\pm10$ results from the $(1-\gamma)R_i$ term when we have $\gamma=0.9$.
 
-Foe-Q and $u$CE-Q also converges. If the initialization are the same, the learning curves are nearly identical for both learners. The final Q-value difference are with in $10^{-7}$ and both learner gives a mixed policy with both player randomly choose between stick and heading south: $\sigma_A(stick/N)=0.525, \sigma_A(S)=0.475, \sigma_B(stick/N)=0.455, \sigma_B(S)=0.545$. Note for $u$CE-Q each players policy is  marginal probability computed from joint probability $\sigma_i(a_i) = \sum_{\mathbf{a_o}}\sigma(\mathbf{a_o}, a_i)$.
+Foe-Q and $u$CE-Q also converges. If the initialization are the same, the learning curves are nearly identical for both learners. The final Q-value difference are with in $10^{-7}$ and both learner gives a mixed polic: both player randomly choose between stick and heading south: $\sigma_A(stick/N)=0.525, \sigma_A(S)=0.475, \sigma_B(stick/N)=0.455, \sigma_B(S)=0.545$. Note for $u$CE-Q each players policy is the marginal probability computed from joint probability $\sigma_i(a_i) = \sum_{\mathbf{a_o}}\sigma(\mathbf{a_o}, a_i)$.
 
-We also experimented with the learning rate decaying schedule in Greenward's 2005 paper, $\alpha(s,\mathbf{a}) = 1/n(s,\mathbf{a})$ and observed similar behavior for all learners. However, the final policy of foe-Q and CE-Q is a bit different from that of exponential decay, $\sigma_A(stick/N)=0.4, \sigma_A(S)=0.6, \sigma_B(stick/N)=0.615, \sigma_B(S)=0.385$. It is possible that one or both schemes haven't converged yet. I verified that when passing a same Q table, the Foe-Q minimax solver and the $u$CE-Q solver would give the same policy and state value -- so I am a bit more confident with my implementation, the difference in final results is likely due to training hyperparameters.
+We also experimented with the learning rate decaying schedule in Greenward's 2005 paper, $\alpha(s,\mathbf{a}) = 1/n(s,\mathbf{a})$ and observed similar behavior for all learners. However, the final Q values and policy of foe-Q and CE-Q is a bit different from that of exponential decay, $\sigma_A(stick/N)=0.4, \sigma_A(S)=0.6, \sigma_B(stick/N)=0.615, \sigma_B(S)=0.385$. It is possible that one or both schemes haven't converged yet, or perhaps both are correlated equilibrium. I verified that when given the same Q table, the Foe-Q minimax solver and the $u$CE-Q solver would produce the same policy and state value -- so I am a bit more confident with my implementation, the difference in final results is likely due to training hyperparameters. I am in favor of 2005 paper schedule personally, because it adjust learning rate differently for each state-action pairs, and the form satisfies $\sum_T \alpha_T \rightarrow \infty$, $\sum_T \alpha_T^2 =0$.
 
-The final Q-table of state $s$ for both Foe-Q and CE-Q is shown in Fig.\ref{fig:foe-ce-Q}. Interestingly, in Foe-Q and CE-Q, two players Q-table preserve the property $Q_A = -Q_B$ during training (If not initialized this way, it empirically converge to something close). For Friend-Q, the converged Q-table does not satisfy $Q_A = -Q_B$ (also see Fig.\ref{fig:friendQ}). As far as I understand, in zero-sum game, there isn't a collaborative equilibrium, so friend-Q does not necessarily converge to Nash equilibrium. Foe-Q converge to Nash equilibrium because there is adversarial equilibrium, and the collaborative equilibrium coincide with Nash equilibrium in case of zero-sum game. Also, in Friend-Q, the Q-table reflects the values when each player expect the other being collaborative, this is not the case in reality however. While in Foe-Q and CE-Q, the other player is behaving as expected --- playing minimax or follow the ``referee".
+The final Q-table of state $s$ for both Foe-Q and CE-Q is shown in Fig.~\ref{fig:foe-ce-Q}. Interestingly, in Foe-Q and CE-Q, two players Q-table preserve the property $Q_A = -Q_B$ during training (If not initialized this way, it empirically converge to something close). For Friend-Q, the converged Q-table does not satisfy $Q_A = -Q_B$ (also see Fig.\ref{fig:friendQ}). As far as I understand, in zero-sum game, there isn't a collaborative equilibrium, so friend-Q does not necessarily converge to Nash equilibrium. Foe-Q converges to Nash equilibrium because there is adversarial equilibrium, and the collaborative equilibrium coincides with Nash equilibrium in the case of zero-sum game. Also, in Friend-Q, the Q-table reflects the values when each player expect the other being collaborative, this is not the case in reality. While in Foe-Q and CE-Q, the other player is behaving as expected --- playing minimax or follow the ``referee".
 
 \begin{figure}[h!]
 	\centering
@@ -277,7 +277,7 @@ The final Q-table of state $s$ for both Foe-Q and CE-Q is shown in Fig.\ref{fig:
 \section{Pitfalls}
 There are several pitfalls in this project that requires future work.
 
-First, Greenward's paper uses on-policy/SARSA update for Q-Learner, while we used off-policy so that everything can be fit into the general off-policy update template \ref{algo:learning}.
+First, Greenward's paper uses on-policy/SARSA update for Q-Learner, while we used off-policy so that everything can be fit into the general off-policy update template  (Algorithem \ref{algo:learning}).
 
 It would also be interesting to implement other variant of CE-Q learners. For $e$CE-Q and $r$CE-Q, we may need to introduce extra variable $u=\sum_{\mathbf{a}}\sigma(\mathbf{a}) Q_i(\mathbf{a})$, solving $max(u)$ with extra constraint $u>(or <) \sum_{\mathbf{a}}\sigma(\mathbf{a}) Q_i(\mathbf{a}), \forall i$. $l$CE-Q would require an decentralized algorithm that each agent solves one LP.
 
